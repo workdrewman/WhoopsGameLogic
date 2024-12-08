@@ -65,6 +65,7 @@ namespace logic_controller
     void handleWhoops(vector<int> possibleMoves);
     void handleSeven(vector<int> possibleMoves, int location);
     void handleEleven(vector<int> possibleMoves, int movingFrom);
+    void checkSlide(int location);
     void saveCurrentLocations(std::vector<int> locations);
     void saveLastLocations(std::vector<int> locations);        
     bool allPiecesPlaced();
@@ -151,18 +152,7 @@ namespace logic_controller
         }
 
         //Slide if on slide square
-        if (find(slideStartLocations.begin(), slideStartLocations.end(), newLocation) != slideStartLocations.end()) {
-            int slideIndex= find(slideStartLocations.begin(), slideStartLocations.end(), newLocation) - slideStartLocations.begin();
-            cout << "Move your piece to the end of the slide (location " << slideEndLocations[slideIndex] << ") and send any pawns you collide with back to their Start."<< endl;
-            for (int i = slideStartLocations[slideIndex] + 1; i <= slideEndLocations[slideIndex]; i++) {
-                if (currentLocations[i] != 0) {
-                    currentLocations[findNextOpenStart(currentLocations[i])] = currentLocations[i];
-                    currentLocations[i] = 0;
-                }
-            }
-            currentLocations[slideEndLocations[slideIndex]] = currentLocations[newLocation];
-            currentLocations[newLocation] = 0;
-        }
+        checkSlide(newLocation);
         
         if (checkWin()) {
             cout << "Player " << currentPlayer + 1 << " wins!" << endl;
@@ -878,6 +868,37 @@ namespace logic_controller
                 cin.ignore();
                 cin.get();
             }
+        }
+    }
+
+    void checkSlide(int location) {
+        if (find(slideStartLocations.begin(), slideStartLocations.end(), location) != slideStartLocations.end()) {
+            //Can't slide on your own color
+            int color = getPlayerColor();
+            if (color == 1 && (location == 0 || location == 6)) {  //Yellow
+                return;
+            }
+            else if (color == 2 && (location == 11 || location == 17)) {  //Green
+                return;
+            }
+            else if (color == 3 && (location == 22 || location == 28)) {  //Red
+                return;
+            }
+            else if (color == 4 && (location == 33 || location == 39)) {  //Blue
+                return;
+            }
+
+            //Otherwise slide
+            int slideIndex= find(slideStartLocations.begin(), slideStartLocations.end(), location) - slideStartLocations.begin();
+            cout << "Move your piece to the end of the slide (location " << slideEndLocations[slideIndex] << ") and send any pawns you collide with back to their Start."<< endl;
+            for (int i = slideStartLocations[slideIndex] + 1; i <= slideEndLocations[slideIndex]; i++) {
+                if (currentLocations[i] != 0) {
+                    currentLocations[findNextOpenStart(currentLocations[i])] = currentLocations[i];
+                    currentLocations[i] = 0;
+                }
+            }
+            currentLocations[slideEndLocations[slideIndex]] = currentLocations[location];
+            currentLocations[location] = 0;
         }
     }
 
