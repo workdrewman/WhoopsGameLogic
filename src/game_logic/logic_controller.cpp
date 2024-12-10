@@ -2,6 +2,7 @@
 
 #include <vector> // for std::vector
 #include <iostream> // for std::cout and std::endl
+#include <algorithm> // for std::find
 
 using namespace std;
 
@@ -64,8 +65,10 @@ namespace logic_controller
     int findNextOpenStart(int color);
     void handleWhoops(vector<int> possibleMoves);
     void handleSeven(vector<int> possibleMoves, int location);
+    void moveSecondPawn(int distance, int start);
     void handleEleven(vector<int> possibleMoves, int movingFrom);
     void checkSlide(int location);
+    int getDistance(int start, int end);
     void saveCurrentLocations(std::vector<int> locations);
     void saveLastLocations(std::vector<int> locations);        
     bool allPiecesPlaced();
@@ -123,6 +126,12 @@ namespace logic_controller
 
         //Light leds of possible moves
         vector<int> possibleMoves = findPossibleMoves(movingFrom, lastCard);
+        //If there are no possible moves, go to next player
+        if (possibleMoves.size() == 0) {
+            cout << "No possible moves" << endl;
+            nextPlayer();
+            takeTurn();
+        }
         cout << "Possible moves: ";
         for (int i = 0; i < possibleMoves.size(); i++) {
             cout << possibleMoves[i] << " ";
@@ -145,6 +154,9 @@ namespace logic_controller
             }
             //If piece hits other piece, send other piece back to start
             if (currentLocations[newLocation] != 0) {
+                cout << "COLLISION: Send opponent's piece back to start. Press any key to confirm: " << endl;
+                cin.ignore();
+                cin.get();
                 currentLocations[findNextOpenStart(currentLocations[newLocation])] = currentLocations[newLocation];
             }
             currentLocations[newLocation] = currentLocations[movingFrom];
@@ -515,8 +527,8 @@ namespace logic_controller
                 else if ((selectedPawn >= (47 + 9*(color-1))) && (selectedPawn <= (48 + 9*(color-1)))) {    //Pawn in safety zone
                     possibleMoves.push_back(selectedPawn - 1);
                 }
-                else if (selectedPawn >= (49 + 9*(color-1))) {    //Pawn in beginning of safety zone
-                    possibleMoves.push_back(1);
+                else if (selectedPawn == (49 + 9*(color-1))) {    //Pawn in beginning of safety zone
+                    possibleMoves.push_back(1 + 11*(color-1));
                 }
                 else if (((selectedPawn >= (40 + 11*(color-1))) && (selectedPawn <= (43 + 11*(color-1)))) || (selectedPawn == (0 + 11*(color-1))) || (selectedPawn == (1 + 11*(color-1)))) {    //Pawn too close to home to move ten
                     if (selectedPawn == 0) {
@@ -537,6 +549,12 @@ namespace logic_controller
                 }
                 break;
             case 11:
+                if ((selectedPawn >= (50 + 9*(color-1))) && (selectedPawn <= (52 + 9*(color-1)))) {    //Pawn can't move in start
+                    break;
+                }
+                else if ((selectedPawn >= (44 + 9*(color-1))) && (selectedPawn <= (46 + 9*(color-1)))) {    //Pawn can't move in home
+                    break;
+                }
                 for (int i = 0; i < 44; i++) {
                     if(currentLocations[i] != color && currentLocations[i] != 0) {
                         possibleMoves.push_back(i);
@@ -555,12 +573,6 @@ namespace logic_controller
                     possibleMoves.push_back(findNextOpenHome(color));
                 }
                 else if (((selectedPawn >= (47 + 9*(color-1))) && (selectedPawn <= (49 + 9*(color-1)))) || (selectedPawn == (0 + 11*(color-1))) || (selectedPawn == (1 + 11*(color-1))) || ((selectedPawn >= ((39 + 11*(color-1))%44)) && (selectedPawn <= ((43 + 11*(color-1))%44)))) {    //Pawn too close to home
-                    break;
-                }
-                else if ((selectedPawn >= (50 + 9*(color-1))) && (selectedPawn <= (52 + 9*(color-1)))) {    //Pawn can't move in start
-                    break;
-                }
-                else if ((selectedPawn >= (44 + 9*(color-1))) && (selectedPawn <= (46 + 9*(color-1)))) {    //Pawn can't move in home
                     break;
                 }
                 else {  //Otherwise move 11 spaces forwards
@@ -800,6 +812,7 @@ namespace logic_controller
             int opponentColor = currentLocations[opponentPawn];
             currentLocations[findNextOpenStart(opponentColor)] = opponentColor;
             currentLocations[opponentPawn] = getPlayerColor();
+            currentLocations[movingFrom] = 0;
             cout << "Press any key to confirm opponent's pawn has been sent back to start and your pawn has been set in their previous location." << endl;
             cin.ignore();
             cin.get();
@@ -819,20 +832,22 @@ namespace logic_controller
                 cin >> location;
             }
             currentLocations[location] = color;
+            currentLocations[movingFrom] = 0;
             int firstDistance = getDistance(movingFrom, location);
             int secondDistance = 7 - firstDistance;
             cout << "You have " << secondDistance << " spaces left to move with your second pawn." << endl;
             cout << "Possible second pawn current locations(s): ";
             for (int i = 0; i < 44; i++) {
-                if (currentLocations[i] == color) {
+                if (currentLocations[i] == color && i != location) {
                     cout << i << " ";
                 }
             }
             for (int i = 0; i < safetyLocations.size(); i++) {
-                if (currentLocations[safetyLocations[i]] == color) {
+                if (currentLocations[safetyLocations[i]] == color && safetyLocations[i] != location) {
                     cout << safetyLocations[i] << " ";
                 }
             }
+            cout << endl;
             cout << "Select a pawn location to move from: ";
             int secondPawnStart;
             cin >> secondPawnStart;
@@ -841,9 +856,47 @@ namespace logic_controller
                 cout << "Select a pawn to move: ";
                 cin >> secondPawnStart;
             }
+            cout << "Move your second pawn " << secondDistance << " spaces forward. Press any key to confirm:" << endl;
+            cin.ignore();
+            cin.get();
             currentLocations[secondPawnStart] = 0;
-            currentLocations[secondPawnStart + secondDistance] = color;
+            moveSecondPawn(secondDistance, secondPawnStart);
         }
+    }
+
+    void moveSecondPawn(int distance, int start) { // Need to finish
+        int color = getPlayerColor();
+        int location = start;
+        for (int i = 0; i < distance; i++) {
+            if (location == 43) {
+                location = 0;
+            }
+            else if (location == 1 + 11*(color-1)) {
+                location = 49 + 9*(color-1);
+            }
+            else if (location == 49 + 9*(color-1)) {
+                location = 48 + 9*(color-1);
+            }
+            else if (location == 48 + 9*(color-1)) {
+                location = 47 + 9*(color-1);
+            }
+            else if (location == 47 + 9*(color-1)) {
+                location = findNextOpenHome(color);
+            }
+            else if (location >= 0 && location < 43) {
+                location++;
+            }
+        }
+
+        //If piece hits other piece, send other piece back to start
+        if (currentLocations[location] != 0) {
+            cout << "COLLISION: Send opponent's piece back to start. Press any key to confirm: " << endl;
+            cin.ignore();
+            cin.get();
+            currentLocations[findNextOpenStart(currentLocations[location])] = currentLocations[location];
+        }
+        currentLocations[location] = color;
+        currentLocations[start] = 0;
     }
 
     void handleEleven(vector<int> possibleMoves, int movingFrom) {
@@ -912,7 +965,7 @@ namespace logic_controller
                 return 44 - start + end;
             }
         } 
-        if ((end >= (44 + 9*(color-1))) && (end <= (46 + 9*(color-1)))) { //Final location in Home
+        else if ((end >= (44 + 9*(color-1))) && (end <= (46 + 9*(color-1)))) { //Final location in Home
             if ((start == (47 + 9*(color-1))) || (start == (49 + 9*(color-1)))) { //Start is in Safety Zone
                 return (start - (46 + 9*(color-1)));
             }
@@ -929,7 +982,7 @@ namespace logic_controller
                 return 7;
             }
         }
-        if (end == (47 + 9*(color-1))) { //Final location in Safety Zone near Home
+        else if (end == (47 + 9*(color-1))) { //Final location in Safety Zone near Home
             if ((start == (48 + 9*(color-1))) || (start == (49 + 9*(color-1)))) { //Start is in Safety Zone
                 return (start - (47 + 9*(color-1)));
             }
@@ -949,7 +1002,7 @@ namespace logic_controller
                 return 7;
             }
         }
-        if (end == (48 + 9*(color-1))) { //Final location in Safety Zone middle
+        else if (end == (48 + 9*(color-1))) { //Final location in Safety Zone middle
             if (start == (49 + 9*(color-1))) { //Start is in Safety Zone
                 return 1;
             }
@@ -972,7 +1025,7 @@ namespace logic_controller
                 return 7;
             }
         }
-        if (end == (49 + 9*(color-1))) { //Final location in Safety Zone near Start
+        else if (end == (49 + 9*(color-1))) { //Final location in Safety Zone near Start
             if (start == (1 + 11*(color-1))) { //Start is one away from Safety Zone
                 return 1;
             }
@@ -995,6 +1048,7 @@ namespace logic_controller
                 return 7;
             }
         }
+        return -1;
     }
 
     //Save the current locations
@@ -1066,10 +1120,21 @@ namespace logic_controller
             currentLocations[68] = 3;
             currentLocations[69] = 3;
             currentLocations[70] = 3;
-        } else if (playerCount == 4) {
+        }
+        if (playerCount == 4) {
             currentLocations[77] = 4;
             currentLocations[78] = 4;
             currentLocations[79] = 4;
+        }
+
+        //Set colors too lol
+        player1Color = 1;
+        player2Color = 2;
+        if (playerCount >= 3) {
+            player3Color = 3;
+        }
+        if (playerCount == 4) {
+            player4Color = 4;
         }
 
         lastLocations = currentLocations;
@@ -1136,8 +1201,7 @@ namespace logic_controller
             cout << "Select a piece to move: ";
             cin >> location;
         }
-        currentLocations[location] = 0;
         movingFrom = location;
-        setPlayerColor();
+        //setPlayerColor();
     }
 }
