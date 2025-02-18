@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Compile the C++ code
-RUN g++ -I include -o WhoopsGameLogic src/main.cpp $(find src -name '*.cpp')
+RUN g++ -I include -o WhoopsGameLogic src/main.cpp src/game_logic/*.cpp
 
 # Make port 80 available to the world outside this container
 EXPOSE 80

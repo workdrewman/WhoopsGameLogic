@@ -2,9 +2,9 @@
 #include "game_logic/logic_board.hpp"
 #include "game_logic/logic_player.hpp"
 #include "game_logic/logic_terminal.hpp"
+#include <algorithm>
 
 namespace logic {
-    LogicBoard::LogicBoard() {}
 
     vector<int> LogicBoard::findOtherPawnLocations(LogicPlayer* Player) {  //Doesn't find pawns in home or start, but does find pawns in safety zone
         vector<int> otherPawnLocations;

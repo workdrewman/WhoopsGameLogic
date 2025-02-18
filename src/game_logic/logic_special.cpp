@@ -4,6 +4,7 @@
 #include "game_logic/logic_player.hpp"
 #include "game_logic/logic_calculations.hpp"
 #include "game_logic/logic_chip.hpp"
+#include <algorithm>
 
 
 namespace logic {
