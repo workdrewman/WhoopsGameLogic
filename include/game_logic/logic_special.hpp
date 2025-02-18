@@ -4,14 +4,14 @@
 
 #include <vector>
 #include <iostream>
-class LogicChip;
-class LogicBoard;
-class LogicPlayer;  
-class LogicCalculations;
 
 using namespace std;
 
 namespace logic {
+    class LogicChip;
+    class LogicBoard;
+    class LogicPlayer;  
+    class LogicCalculations;
     class LogicSpecial {
         public:
             LogicSpecial();

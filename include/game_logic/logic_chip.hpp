@@ -4,11 +4,11 @@
 
 #include <vector>
 #include <string>
-class LogicTerminal;
 
 using namespace std;
 
 namespace logic {
+    class LogicTerminal;
     class LogicChip {
         public:
             LogicChip();

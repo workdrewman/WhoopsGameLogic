@@ -1,5 +1,10 @@
 /// logic_terminal.cpp
 #include "game_logic/logic_terminal.hpp"
+#include "game_logic/logic_board.hpp"
+#include "game_logic/logic_player.hpp"
+#include "game_logic/logic_chip.hpp"
+#include "game_logic/logic_calculations.hpp"
+#include "game_logic/logic_special.hpp"
 #include <iostream>
 
 using namespace std;

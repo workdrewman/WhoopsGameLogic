@@ -4,12 +4,12 @@
 
 #include <vector>
 #include <iostream>
-class LogicBoard;
-class LogicChip;
-class LogicPlayer;  
-class LogicCalculations;
 
 namespace logic {
+    class LogicBoard;
+    class LogicChip;
+    class LogicPlayer;  
+    class LogicCalculations;
     class LogicTerminal {
         public:
             LogicTerminal();

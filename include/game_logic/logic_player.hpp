@@ -4,13 +4,13 @@
 
 #include <vector>
 #include <iostream>
-class LogicChip;
-class LogicBoard;
-class LogicTerminal;
 
 using namespace std;
 
 namespace logic {
+    class LogicChip;
+    class LogicBoard;
+    class LogicTerminal;
     class LogicPlayer {
         private:
             int playerCount;

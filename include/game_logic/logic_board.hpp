@@ -3,12 +3,12 @@
 #define GAME_BOARD_LOGIC_BOARD_HPP
 
 #include <vector>
-class LogicPlayer;
-class LogicTerminal;
 
 using namespace std;
 
 namespace logic {
+    class LogicPlayer;
+    class LogicTerminal;
     class LogicBoard {
         private:
             int MAX_PLAYERS = 4;

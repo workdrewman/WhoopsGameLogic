@@ -1,5 +1,8 @@
 /// logic_player.cpp
 #include "game_logic/logic_player.hpp"
+#include "game_logic/logic_board.hpp"
+#include "game_logic/logic_chip.hpp"
+#include "game_logic/logic_terminal.hpp"
 
 using namespace std;
 

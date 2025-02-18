@@ -1,5 +1,10 @@
 /// logic_special.cpp
 #include "game_logic/logic_special.hpp"
+#include "game_logic/logic_board.hpp"
+#include "game_logic/logic_player.hpp"
+#include "game_logic/logic_calculations.hpp"
+#include "game_logic/logic_chip.hpp"
+
 
 namespace logic {
     LogicSpecial::LogicSpecial() {}
