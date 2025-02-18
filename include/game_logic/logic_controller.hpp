@@ -12,23 +12,39 @@
 // #include "../game_board/tile/base_tile.hpp" // for Tile
 // #include "../game_board/tile/tile_container.hpp" // for TileContainer
 
+#include "logic_player.hpp"
+#include "logic_board.hpp"
+#include "logic_chip.hpp"
+#include "logic_special.hpp"
+#include "logic_calculations.hpp"
+#include "logic_terminal.hpp"
+
 #include <vector> // for std::vector
 #include <memory> // for std::shared_ptr
+#include <iostream> // for std::cout and std::endl
+#include <algorithm> // for std::find
 
-namespace logic_controller
+using namespace std;
+
+namespace logic
 {
-    void startGame();
-    void getPlayerCount();
-    void nextPlayer();
-    void saveCard(int card);
-    int waitForCard();
-    void saveCurrentLocations(std::vector<int> locations);
-    void saveLastLocations(std::vector<int> locations);
-    bool allPiecesPlaced();
-    int moveSpaces(int color, int location, int spaces);
 
-    //terminal functions
-    int t_GetCard();
+    class LogicController {
+        private:
+            LogicPlayer Player;
+            LogicBoard Board;
+            LogicChip Chip;
+            LogicSpecial Special;
+            LogicCalculations Calc;
+            LogicTerminal Terminal;
+
+        public:
+            LogicController();
+            void startGame();
+            void takeTurn();
+            void nextPlayer();
+    };
+
 }
 
 #endif // GAME_BOARD_CONTROLLER_H
