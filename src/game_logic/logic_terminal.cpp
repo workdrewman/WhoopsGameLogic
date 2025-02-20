@@ -93,7 +93,7 @@ namespace logic {
     void LogicTerminal::t_whereAreMyPieces(LogicBoard* Board, LogicPlayer* Player) {
         int color = Player->getPlayerColor(Player->currentPlayer);
         cout << "Player " << Player->currentPlayer + 1 << "'s pieces: ";
-        for (int i = 0; i < Board->boardSize; i++) {
+        for (int i = 0; i < kBoardSize; i++) {
             if (Board->currentLocations[i] == color) {
                 cout << i << " ";
             }

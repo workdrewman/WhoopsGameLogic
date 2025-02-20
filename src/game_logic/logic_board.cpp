@@ -14,9 +14,9 @@ namespace logic {
                 otherPawnLocations.push_back(i);
             }
         }
-        for (int j = 0; j < safetyLocations.size(); j++) {
-            if (currentLocations[safetyLocations[j]] == color) {
-                otherPawnLocations.push_back(safetyLocations[j]);
+        for (int j = 0; j < kSafetyLocations.size(); j++) {
+            if (currentLocations[kSafetyLocations[j]] == color) {
+                otherPawnLocations.push_back(kSafetyLocations[j]);
             }
         }
         return otherPawnLocations;
@@ -142,7 +142,7 @@ namespace logic {
     }
 
     void LogicBoard::checkSlide(LogicPlayer* Player, int location) {
-        if (find(slideStartLocations.begin(), slideStartLocations.end(), location) != slideStartLocations.end()) {
+        if (find(kSlideStartLocations.begin(), kSlideStartLocations.end(), location) != kSlideStartLocations.end()) {
             //Can't slide on your own color
             int color = Player->getPlayerColor(Player->currentPlayer);
             if (color == 1 && (location == 0 || location == 6)) {  //Yellow
@@ -159,15 +159,15 @@ namespace logic {
             }
 
             //Otherwise slide
-            int slideIndex= find(slideStartLocations.begin(), slideStartLocations.end(), location) - slideStartLocations.begin();
-            cout << "Move your piece to the end of the slide (location " << slideEndLocations[slideIndex] << ") and send any pawns you collide with back to their Start."<< endl;
-            for (int i = slideStartLocations[slideIndex] + 1; i <= slideEndLocations[slideIndex]; i++) {
+            int slideIndex= find(kSlideStartLocations.begin(), kSlideStartLocations.end(), location) - kSlideStartLocations.begin();
+            cout << "Move your piece to the end of the slide (location " << kSlideEndLocations[slideIndex] << ") and send any pawns you collide with back to their Start."<< endl;
+            for (int i = kSlideStartLocations[slideIndex] + 1; i <= kSlideEndLocations[slideIndex]; i++) {
                 if (currentLocations[i] != 0) {
                     currentLocations[findNextOpenStart(currentLocations[i])] = currentLocations[i];
                     currentLocations[i] = 0;
                 }
             }
-            currentLocations[slideEndLocations[slideIndex]] = currentLocations[location];
+            currentLocations[kSlideEndLocations[slideIndex]] = currentLocations[location];
             currentLocations[location] = 0;
         }
     }

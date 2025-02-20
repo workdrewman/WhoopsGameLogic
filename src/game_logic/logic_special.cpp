@@ -53,9 +53,9 @@ namespace logic {
                     cout << i << " ";
                 }
             }
-            for (int i = 0; i < Board->safetyLocations.size(); i++) {
-                if (Board->currentLocations[Board->safetyLocations[i]] == color && Board->safetyLocations[i] != location) {
-                    cout << Board->safetyLocations[i] << " ";
+            for (int i = 0; i < kSafetyLocations.size(); i++) {
+                if (Board->currentLocations[kSafetyLocations[i]] == color && kSafetyLocations[i] != location) {
+                    cout << kSafetyLocations[i] << " ";
                 }
             }
             cout << endl;
