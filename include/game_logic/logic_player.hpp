@@ -14,7 +14,6 @@ namespace logic {
     class LogicPlayer {
         private:
             int playerCount;
-            vector<int> playerColors = {0, 0, 0, 0};
 
         public:
             LogicPlayer();
@@ -25,10 +24,7 @@ namespace logic {
             void handleSelfCollision(LogicBoard* Board, int possibleMove, vector<int> &possibleMoves, int index);
 
             int currentPlayer;
-            int player1Color = 0;
-            int player2Color = 0;
-            int player3Color = 0;
-            int player4Color = 0;
+            vector<int> playerColors = {0, 0, 0, 0}; 
     };
 } 
 

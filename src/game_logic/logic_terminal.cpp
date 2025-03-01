@@ -38,13 +38,13 @@ namespace logic {
         }
 
         //Set colors too lol
-        Player->player1Color = 1;
-        Player->player2Color = 2;
+        Player->playerColors[0] = 1;
+        Player->playerColors[1] = 2;
         if (Player->getPlayerCount() >= 3) {
-            Player->player3Color = 3;
+            Player->playerColors[2] = 3;
         }
         if (Player->getPlayerCount() == 4) {
-            Player->player4Color = 4;
+            Player->playerColors[3] = 4;
         }
 
         Board->lastLocations = Board->currentLocations;
