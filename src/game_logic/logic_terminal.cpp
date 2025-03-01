@@ -1,5 +1,10 @@
 /// logic_terminal.cpp
 #include "game_logic/logic_terminal.hpp"
+#include "game_logic/logic_board.hpp"
+#include "game_logic/logic_player.hpp"
+#include "game_logic/logic_chip.hpp"
+#include "game_logic/logic_calculations.hpp"
+#include "game_logic/logic_special.hpp"
 #include <iostream>
 
 using namespace std;
@@ -33,13 +38,13 @@ namespace logic {
         }
 
         //Set colors too lol
-        Player->player1Color = 1;
-        Player->player2Color = 2;
+        Player->playerColors[0] = 1;
+        Player->playerColors[1] = 2;
         if (Player->getPlayerCount() >= 3) {
-            Player->player3Color = 3;
+            Player->playerColors[2] = 3;
         }
         if (Player->getPlayerCount() == 4) {
-            Player->player4Color = 4;
+            Player->playerColors[3] = 4;
         }
 
         Board->lastLocations = Board->currentLocations;
@@ -88,7 +93,7 @@ namespace logic {
     void LogicTerminal::t_whereAreMyPieces(LogicBoard* Board, LogicPlayer* Player) {
         int color = Player->getPlayerColor(Player->currentPlayer);
         cout << "Player " << Player->currentPlayer + 1 << "'s pieces: ";
-        for (int i = 0; i < Board->boardSize; i++) {
+        for (int i = 0; i < kBoardSize; i++) {
             if (Board->currentLocations[i] == color) {
                 cout << i << " ";
             }

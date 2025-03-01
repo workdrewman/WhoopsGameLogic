@@ -1,5 +1,11 @@
 /// logic_special.cpp
 #include "game_logic/logic_special.hpp"
+#include "game_logic/logic_board.hpp"
+#include "game_logic/logic_player.hpp"
+#include "game_logic/logic_calculations.hpp"
+#include "game_logic/logic_chip.hpp"
+#include <algorithm>
+
 
 namespace logic {
     LogicSpecial::LogicSpecial() {}
@@ -47,9 +53,9 @@ namespace logic {
                     cout << i << " ";
                 }
             }
-            for (int i = 0; i < Board->safetyLocations.size(); i++) {
-                if (Board->currentLocations[Board->safetyLocations[i]] == color && Board->safetyLocations[i] != location) {
-                    cout << Board->safetyLocations[i] << " ";
+            for (int i = 0; i < kSafetyLocations.size(); i++) {
+                if (Board->currentLocations[kSafetyLocations[i]] == color && kSafetyLocations[i] != location) {
+                    cout << kSafetyLocations[i] << " ";
                 }
             }
             cout << endl;

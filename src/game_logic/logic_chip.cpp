@@ -1,5 +1,6 @@
 /// chip_logic.cpp
 #include "game_logic/logic_chip.hpp"
+#include "game_logic/logic_terminal.hpp"
 #include <iostream>
 
 using namespace std;
