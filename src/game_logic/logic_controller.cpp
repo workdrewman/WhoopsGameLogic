@@ -48,7 +48,10 @@ namespace logic
         cout << "Please place pieces on start locations" << endl;
         while (!Board.allPiecesOnStart(&Player, &Terminal)) {};
 
-        takeTurn();
+        while (!Board.checkWinCondition(&Player)) {
+            takeTurn();
+        }
+        cout << "Player " << Player.currentPlayer + 1 << " wins!" << endl;
     }
 
     void LogicController::takeTurn() {
@@ -70,7 +73,7 @@ namespace logic
         if (possibleMoves.size() == 0) {
             cout << "No possible moves" << endl;
             nextPlayer();
-            takeTurn();
+            return;
         }
         cout << "Possible moves: ";
         for (int i = 0; i < possibleMoves.size(); i++) {
@@ -105,12 +108,7 @@ namespace logic
         //Slide if on slide square
         Board.checkSlide(&Player, newLocation);
         
-        if (Board.checkWinCondition(&Player)) {
-            cout << "Player " << Player.currentPlayer + 1 << " wins!" << endl;
-        } else {
-            nextPlayer();
-            takeTurn();
-        }
+        if (!Board.checkWinCondition(&Player)) {nextPlayer();}
     }
 
     //Next player, 4 players in total
