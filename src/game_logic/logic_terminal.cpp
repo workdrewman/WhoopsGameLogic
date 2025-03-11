@@ -6,6 +6,7 @@
 #include "game_logic/logic_calculations.hpp"
 #include "game_logic/logic_special.hpp"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -90,23 +91,30 @@ namespace logic {
         cout << endl;
     }
 
-    void LogicTerminal::t_whereAreMyPieces(LogicBoard* Board, LogicPlayer* Player) {
+    void LogicTerminal::t_selectPiece(LogicBoard* Board, LogicPlayer* Player, LogicCalculations* Calc, int chip) {
         int color = Player->getPlayerColor(Player->currentPlayer);
-        cout << "Player " << Player->currentPlayer + 1 << "'s pieces: ";
+        cout << "Player " << Player->currentPlayer + 1 << "'s moveable pieces: ";
+        vector<int> possibleMoves, validPieces;
         for (int i = 0; i < kBoardSize; i++) {
             if (Board->currentLocations[i] == color) {
-                cout << i << " ";
+                possibleMoves = Calc->findPossibleMoves(Board, Player, i, chip);
+                if (possibleMoves.size() != 0) {
+                    cout << i << " ";
+                    validPieces.push_back(i);
+                }
             }
         }
         cout << endl;
-    }
 
-    void LogicTerminal::t_selectPiece(LogicBoard* Board, LogicPlayer* Player, LogicCalculations* Calc) {
+        if (validPieces.size() == 0) {
+            Calc->movingFrom = -1;
+            return;
+        }
         int location;
-        int color = Player->getPlayerColor(Player->currentPlayer);
         cout << "Select a location to move " << Player->currentPlayer + 1 << "'s piece from: ";
         cin >> location;
-        while (Board->currentLocations[location] != color) {
+        //while location is not in validPieces
+        while (find(validPieces.begin(), validPieces.end(), location) == validPieces.end()) {
             cout << "Invalid piece" << endl;
             cout << "Select a piece to move: ";
             cin >> location;

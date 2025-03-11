@@ -61,11 +61,8 @@ namespace logic
         Chip.lastChip = Chip.waitForChip(&Terminal);
         Terminal.t_displayChipInstructions(&Chip);
 
-        //Display pieces
-        Terminal.t_whereAreMyPieces(&Board, &Player);
-
         //Pick up a piece
-        Terminal.t_selectPiece(&Board, &Player, &Calc);
+        Terminal.t_selectPiece(&Board, &Player, &Calc, Chip.lastChip);
 
         //Light leds of possible moves
         vector<int> possibleMoves = Calc.findPossibleMoves(&Board, &Player, Calc.movingFrom, Chip.lastChip);
@@ -103,10 +100,10 @@ namespace logic
             }
             Board.currentLocations[newLocation] = Board.currentLocations[Calc.movingFrom];
             Board.currentLocations[Calc.movingFrom] = 0;
-        }
 
-        //Slide if on slide square
-        Board.checkSlide(&Player, newLocation);
+            //Slide if on slide square
+            newLocation = Board.checkSlide(&Player, newLocation);
+        }
         
         if (!Board.checkWinCondition(&Player)) {nextPlayer();}
     }

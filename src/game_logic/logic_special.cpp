@@ -24,6 +24,8 @@ namespace logic {
             Board->currentLocations[Board->findNextOpenStart(opponentColor)] = opponentColor;
             Board->currentLocations[opponentPawn] = Player->getPlayerColor(Player->currentPlayer);
             Board->currentLocations[Calc->movingFrom] = 0;
+            //Slide if on slide square
+            int newLocation = Board->checkSlide(Player, opponentPawn);
             cout << "Press any key to confirm opponent's pawn has been sent back to start and your pawn has been set in their previous location." << endl;
             cin.ignore();
             cin.get();
@@ -44,12 +46,17 @@ namespace logic {
             }
             Board->currentLocations[location] = color;
             Board->currentLocations[movingFrom] = 0;
+            //Slide if on slide square
+            int newLocation = Board->checkSlide(Player, location);
             int firstDistance = Calc->getDistance(Player, movingFrom, location);
             int secondDistance = 7 - firstDistance;
+            if (secondDistance == 0) {
+                return;
+            }
             cout << "You have " << secondDistance << " spaces left to move with your second pawn." << endl;
             cout << "Possible second pawn current locations(s): ";
             for (int i = 0; i < 44; i++) {
-                if (Board->currentLocations[i] == color && i != location) {
+                if (Board->currentLocations[i] == color && i != location && i != newLocation) {
                     cout << i << " ";
                 }
             }
@@ -108,6 +115,8 @@ namespace logic {
         }
         Board->currentLocations[location] = color;
         Board->currentLocations[start] = 0;
+        //Slide if on slide square
+        location = Board->checkSlide(Player, location);
     }
 
     void LogicSpecial::handleEleven(LogicChip* Chip, LogicBoard* Board, LogicPlayer* Player, vector<int> possibleMoves, int movingFrom) {
@@ -124,10 +133,17 @@ namespace logic {
             }
             if (Board->currentLocations[endLocation] == 0) {
                 Board->currentLocations[endLocation] = color;
+                //Slide if on slide square
+                endLocation = Board->checkSlide(Player, endLocation);
+                Board->currentLocations[movingFrom] = 0;
             } else {
                 int opponentColor = Board->currentLocations[endLocation];
                 Board->currentLocations[movingFrom] = opponentColor;
+                //Slide if on slide square
+                int opponentPosition = Board->checkSlide(Player, movingFrom);
                 Board->currentLocations[endLocation] = color;
+                //Slide if on slide square
+                endLocation = Board->checkSlide(Player, endLocation);
                 cout << "Press any key to confirm opponent's pawn swapped with your pawn." << endl;
                 cin.ignore();
                 cin.get();
